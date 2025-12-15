@@ -1,15 +1,3 @@
-# | Étape de la mission                      | Série utilisée                                     | Période                 |
-#   | ---------------------------------------- | -------------------------------------------------- | ----------------------- |
-#   | Traitement, nettoyage, transformation    | Série d’entraînement                               | 22/11/2018 → 31/08/2024 |
-#   | Moyennes mobiles, tendances, régressions | Série d’entraînement                               | 22/11/2018 → 31/08/2024 |
-#   | Coefficients saisonniers, décomposition  | Série d’entraînement                               | 22/11/2018 → 31/08/2024 |
-#   | Désaisonnalisation                       | Série d’entraînement                               | 22/11/2018 → 31/08/2024 |
-#   | Analyse des résidus                      | Série d’entraînement                               | 22/11/2018 → 31/08/2024 |
-#   | Prévisions 1/09/2024 → 23/01/2025        | Modèles ajustés sur série d’entraînement           | 22/11/2018 → 31/08/2024 |
-#   | Évaluation des prévisions (EQM)          | Série complète (pour récupérer les vraies valeurs) | 01/09/2024 → 27/01/2025 |
-#   
-
-
 # Environnement de travail ----
 
 rm(list = ls())
@@ -903,4 +891,5 @@ legend("topleft",
        legend = c("Série Entrainée (2018–2024)", "Série de test (2024–2025)","ARIMA","Holt-Winters","Polynome degré 2"),
        col = c("black", "red","green","orange","purple"),
        lwd = 2)
+
 
