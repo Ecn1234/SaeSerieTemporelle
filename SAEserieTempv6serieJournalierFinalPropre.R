@@ -112,11 +112,7 @@ sum(is.na(chatelet_2018_2024_journalier$MOYENNE_CO2))/length(chatelet_2018_2024_
 
 # On a retrouvé 6 dates qui n'ont pas été entré dans le jeu de donnée
 
-dates_completes <- seq(
-  from = as.Date("2018-11-22"),
-  to   = as.Date("2024-08-31"),
-  by   = "day"
-)
+dates_completes <- seq(as.Date("2018-11-22"), as.Date("2024-08-31"), by   = "day")
 length(dates_completes)   
 
 
@@ -891,5 +887,6 @@ legend("topleft",
        legend = c("Série Entrainée (2018–2024)", "Série de test (2024–2025)","ARIMA","Holt-Winters","Polynome degré 2"),
        col = c("black", "red","green","orange","purple"),
        lwd = 2)
+
 
 
