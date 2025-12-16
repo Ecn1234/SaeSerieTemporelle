@@ -556,6 +556,163 @@ lines(prediction_sarmaFin2025, col="orange", lwd=2)
 
 
 
+# ============================================================== #
+#
+# III) a) PREDICTION MANUEL SARMA-----
+# 
+# ===============================================================#
+
+
+
+
+# 1. Différence simple pour enlever la tendance
+co2_diff <- diff(co2.ts, differences = 1)
+
+# 2. Différence saisonnière annuelle (lag = 365)
+co2_diff_season <- diff(co2_diff, lag = 365)
+
+
+
+par(mfrow=c(2,1))
+plot(co2_diff, main="Différence simple")
+plot(co2_diff_season, main="Différence simple + saisonnière")
+par(mfrow=c(1,1))
+
+
+
+require(tseries)
+
+adf.test(co2_diff_season, alternative="stationary",12)
+
+
+par(mfrow=c(1,1))
+
+
+
+# Petits lags pour qmax
+acf(co2_diff_season, lag.max = 20)
+
+# Lags autour de la saison annuelle pour Qmax
+acf(co2_diff_season, lag.max = 400)
+# 400 pour voir le pic à lag 365
+
+
+
+pacf(co2_diff_season, lag.max = 20)   # Pour pmax, lags courts
+pacf(co2_diff_season, lag.max = 400)  # Pour Pmax, lags saisonniers
+
+
+
+
+
+set.seed(008)
+
+# qmax = 1 ou 2
+q.max = 1
+Q.max =1
+
+
+
+# pmax = 2 ou 3
+p.max = 2
+P.max = 1
+
+
+
+
+Resultats <- data.frame(P=NA, Q=NA, p=NA, q=NA,
+                        aic=NA, loglik=NA, p.valeur=NA)
+
+k = 1
+
+for (P in 0:P.max){
+  for (Q in 0:Q.max){
+    for (p in 0:p.max){
+      for (q in 0:q.max){
+        
+        mod.aux <- arima(co2.ts,
+                         order = c(p,1,q),
+                         seasonal = list(order = c(P,1,Q), period = 365),
+                         method = "CSS-ML")
+        
+        Resultats[k,] <- c(P, Q, p, q,
+                           mod.aux$aic,
+                           mod.aux$loglik,
+                           Box.test(mod.aux$residuals,
+                                    lag = 20,
+                                    type = "Ljung-Box")$p.value)
+        k <- k + 1
+      }
+    }
+  }
+}
+
+
+
+
+
+ordre <- Resultats[which.min(Resultats$aic), 1:4]
+ordre
+
+
+
+sarma_final <- arima(co2.ts,
+                     order = c(ordre$p, 1, ordre$q),
+                     seasonal = list(order = c(ordre$P, 1, ordre$Q),
+                                     period = 365))
+
+summary(sarma_final)
+checkresiduals(sarma_final)
+
+
+
+
+h <- as.numeric(as.Date("2025-01-23") - as.Date("2024-09-01")) + 1
+hFin2025 <- as.numeric(as.Date("2025-12-31") - as.Date("2024-09-01")) + 1
+
+
+
+
+# 4️⃣ Prévision
+prediction_auto_sarma <- forecast(sarma_final, h = h)
+
+prediction_auto_sarmaFin2025 <- forecast(sarma_final, h = hFin2025)
+
+# 5️⃣ Extraction des valeurs prédites
+prediction_sarma <- prediction_auto_sarma$mean
+
+prediction_sarmaFin2025 <- prediction_auto_sarmaFin2025$mean
+
+# 6️⃣ Tracé
+
+
+debut <- c(2018, yday(as.Date("2018-11-22")))
+fin   <- c(2026, yday(as.Date("2026-01-23")))
+
+plot(co2.ts, 
+     col = "black", lwd = 1.5,
+     main = "Prévisions SARMA pour la période du 23 janvier au 31 décembre 2025 – Station Châtelet",
+     xlab = "Temps", ylab = "CO2",
+     xlim = c(debut[1] + (debut[2]-1)/365,
+              fin[1]   + (fin[2]-1)/365))
+
+# Axe des dates
+axis(1, at = seq(min(dates), max(dates), by = "month"),
+     labels = format(seq(min(dates), max(dates), by = "month"), "%Y-%m"))
+
+
+
+
+
+lines(prediction_sarma, col="red", lwd=2)
+lines(prediction_sarmaFin2025, col="orange", lwd=2)
+
+
+
+
+
+
+
 
 # ============================================================== #
 #
@@ -899,6 +1056,7 @@ legend("topleft",
        legend = c("Série Entrainée (2018–2024)", "Série de test (2024–2025)","ARIMA","Holt-Winters","Polynome degré 2"),
        col = c("black", "red","green","orange","purple"),
        lwd = 2)
+
 
 
 
