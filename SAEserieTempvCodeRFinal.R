@@ -1,7 +1,7 @@
 # Environnement de travail ----
 
 rm(list = ls())
-setwd("D:/devoir de Enzo/IUT 2eme annee/SAE Données temporelles")
+setwd("VotreChemin")
 .libPaths("Packages")
 
 
@@ -1056,6 +1056,7 @@ legend("topleft",
        legend = c("Série Entrainée (2018–2024)", "Série de test (2024–2025)","ARIMA","Holt-Winters","Polynome degré 2"),
        col = c("black", "red","green","orange","purple"),
        lwd = 2)
+
 
 
 
