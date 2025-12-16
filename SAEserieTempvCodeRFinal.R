@@ -651,6 +651,18 @@ mod3 <- lm(CVS ~ t + I(t^2) + I(t^3))
 # Degré 4
 mod4 <- lm(CVS ~ t + I(t^2) + I(t^3) + I(t^4))
 
+
+
+
+tend_2 <-  mod2$coefficients[1] + mod2$coefficients[2]*t + mod2$coefficients[3]*t^2
+
+
+plot(CVS, xlab="Années", main="Modèle polynomial de degré 2 ajustée sur la CVS", lty=3, col="red")
+lines(tend_2, col="black")
+
+legend("topright", legend = c("CVS", "Degré 2"),
+       col = c("red", "black"), lwd = 2, bty = "n")
+
 # ============================
 # c. Sélection du meilleur via AIC
 # ============================
@@ -887,6 +899,7 @@ legend("topleft",
        legend = c("Série Entrainée (2018–2024)", "Série de test (2024–2025)","ARIMA","Holt-Winters","Polynome degré 2"),
        col = c("black", "red","green","orange","purple"),
        lwd = 2)
+
 
 
 
